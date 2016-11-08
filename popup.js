@@ -1,4 +1,4 @@
-
+onLoad=getTabs();
 
 
 document.getElementById('get-tabs').onclick = getTabs;
