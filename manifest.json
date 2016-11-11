@@ -1,6 +1,9 @@
 // manifest file tells chrome stuff about your extension
 
 {
+ "background": {
+    "page": "background.html"
+  },
   "manifest_version": 2,
   "name": "Manage Dem Tabs",
   "version": "0.1",
@@ -9,7 +12,7 @@
     "matches": [
       "<all_urls>"
     ],
-    "js": ["jquery-3.1.1.min.js","content.js"]
+    "js": ["jquery-3.1.1.min.js","background.js"]
   }
 ],
 // add permisons to access url of current tab
@@ -21,12 +24,13 @@
 "browser_action": {
   "default_icon": "test_icon.png",
   "default_popup": "popup.html"
-},
-
-"background": {
-  "scripts": ["background.js"],
-   "persistent": false
-}
+ }
+//  "background": {
+//   "page": "background.html"
+// }
+// "background": {
+//   "scripts": ["background.js"]
+// }
   
 }
 
