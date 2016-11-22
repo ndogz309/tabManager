@@ -6,6 +6,38 @@ var tabmanager = {
 };
 
 
+//check for old tabs every 10 seconds
+checkForOldTabs();
+setInterval(checkForOldTabs, 10000);
+
+
+function checkForOldTabs(){
+    //need to seperate this into some kind of setting thing
+  var maxAge=30000;
+  chrome.tabs.query({windowType: 'normal'}, function(tabs) {
+    var tabNum = tabs.length;
+      for (var i = 0; i < tabNum; i++) {
+        var tab=tabs[i];
+        var lastModified = tabmanager.tabTimes[tab.id];
+        var timeAgo = new Date().getTime()-lastModified;
+
+        if (timeAgo > maxAge) {
+          console.log("kill this one");
+          chrome.tabs.remove(tab.id);
+
+           };
+
+
+
+};
+});
+
+console.log("check for old tabs");
+
+};
+
+
+
 
 
 chrome.runtime.onStartup.addListener(function () {
