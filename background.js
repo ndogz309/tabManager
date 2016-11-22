@@ -6,6 +6,12 @@ var tabmanager = {
 };
 
 
+
+
+chrome.runtime.onStartup.addListener(function () {
+    /* Do some initialization */
+
+ 
 chrome.tabs.query({windowType: 'normal'}, function(tabs) {
 
   console.log("call this one");
@@ -15,9 +21,13 @@ console.log(tabNum);
  for (i = 0; i < tabs.length; i++) {
           tabmanager.updateLastAccessed(tabs[i].id);
         }
-  
+ console.log("chrome runtime tabmanager");  
 console.log(tabmanager);
   });
+
+});
+
+
 
 
 
