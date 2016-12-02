@@ -6,6 +6,7 @@ var tabmanager = {
 };
 
 
+
 //check for old tabs every 10 seconds
 checkForOldTabs();
 setInterval(checkForOldTabs, 10000);
@@ -14,8 +15,14 @@ setInterval(checkForOldTabs, 10000);
 function checkForOldTabs(){
     //need to seperate this into some kind of setting thing
   var maxAge=30000;
+
+var tabsToKill =[];
+
+
   chrome.tabs.query({windowType: 'normal'}, function(tabs) {
     var tabNum = tabs.length;
+     
+
       for (var i = 0; i < tabNum; i++) {
         var tab=tabs[i];
         var lastModified = tabmanager.tabTimes[tab.id];
@@ -23,16 +30,43 @@ function checkForOldTabs(){
 
         if (timeAgo > maxAge) {
           console.log("kill this one");
-          chrome.tabs.remove(tab.id);
+         // chrome.tabs.remove(tab.id);
+          tabsToKill.push(tab.id);
+          console.log(tabsToKill);
+ };
 
-           };
 
-
+console.log("check for old tabs");
+console.log("tabs to kill array");
+console.log(tabsToKill.length);
+killTabs(tabsToKill);
 
 };
 });
 
-console.log("check for old tabs");
+
+
+
+};
+
+
+function killTabs(tabsArray){
+   // we only want to close tabs if there are more than some minimum open
+var minTabs = 2;
+
+tabsToClose = tabsArray.splice(0, tabsArray.length - minTabs);
+
+if(tabsToClose.length >0){
+ for (var i = 0; i < tabsToClose.length; i++) {
+
+console.log("this bitttttt");
+ var tab=tabsToClose[i];
+chrome.tabs.remove(tab);
+
+
+  };
+
+};
 
 };
 
