@@ -4,17 +4,67 @@ var tabmanager = {
   tabTimes: {} // An array of tabId => timestamp
 
 };
+var maxAge;
+//10 mins in ms
+var defaultMaxAge=10*60*1000;
+
+var minTabs;
+var defaultMinTabs=5;
+
+getSettings();
+
+
+function getSettings(){
+
+  chrome.storage.sync.get('maxTabAge',function(item){
+    if(item["maxTabAge"]){
+      console.log("maximum taaaabbbbbbb age");
+      console.log(item["maxTabAge"]);
+      maxAge=item["maxTabAge"];
+       }
+    else{
+    //set to default max age
+      chrome.storage.sync.set({'maxTabAge': defaultMaxAge}, function() {
+      console.log("saved the default max age of tabs");
+      maxAge=defaultMaxAge;
+
+
+          });
+        }
+   });
+
+  chrome.storage.sync.get('minTabs',function(item){
+    if(item["minTabs"]){
+      console.log("min NUMBER taaaabbbbbbb");
+      console.log(item["minTabs"]);
+      minTabs=item["minTabs"];
+       }
+    else{
+    //set to default max age
+      chrome.storage.sync.set({'minTabs': defaultMinTabs}, function() {
+      console.log("saved the default min NUMBER of tabs");
+      minTabs=defaultMinTabs;
+
+
+          });
+        }
+   });
+
+
+};
 
 
 
-//check for old tabs every 10 seconds
+
+
+//check for old tabs every 1000 seconds
 checkForOldTabs();
-setInterval(checkForOldTabs, 10000);
+setInterval(checkForOldTabs, 1000000);
 
 
 function checkForOldTabs(){
     //need to seperate this into some kind of setting thing
-  var maxAge=30000;
+
 
 var tabsToKill =[];
 
@@ -76,7 +126,7 @@ chrome.tabs.remove(tab);
 
 chrome.runtime.onStartup.addListener(function () {
     /* Do some initialization */
-
+ // maxAge=30000;
  
 chrome.tabs.query({windowType: 'normal'}, function(tabs) {
 

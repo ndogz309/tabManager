@@ -1,8 +1,19 @@
 
 var background = chrome.extension.getBackgroundPage();
 var tableRef = document.getElementById('mytable');
+var maxAgeInput=document.getElementById("maxAgeInput");
+var minTabsInput=document.getElementById("minTabsInput");
+
+
+
 
 onLoad=getTabs();
+
+document.addEventListener('DOMContentLoaded', function () {
+      maxAgeInput.addEventListener('change', maxAgeChanged);
+      minTabsInput.addEventListener('change', minTabsChanged);
+
+});
 
 
 function getTabs(){
@@ -15,7 +26,36 @@ var tabmanager=background.tabmanager;
   console.log(tabmanager);
 
 makeTable(tabmanager);
+
+console.log("background max age input");
+console.log(background.maxAge);
+
+
+
+
+maxAgeInput.value=milisecondsToMinutes(background.maxAge);
+minTabsInput.value=background.minTabs;
+
+//maxAgeInput.value=background.maxAge/(1000*60);
+//background.maxAge;
 };
+
+function maxAgeChanged(){
+ chrome.storage.sync.set({'maxTabAge': minutesToMiliseconds(maxAgeInput.value)}, function() {
+        background.maxAge=minutesToMiliseconds(maxAgeInput.value);
+          });
+}
+
+
+function minTabsChanged(){
+ chrome.storage.sync.set({'minTabs': minTabsInput.value}, function() {
+        background.minTabs=minTabsInput.value;
+          });
+}
+
+
+
+
 
 
 
@@ -48,32 +88,28 @@ var tabmanager=background.tabmanager;
         timerCell.className = 'timer-cell';
 
         var lastModified = tabmanager.tabTimes[tab.id];
- 	      console.log("check this");
-        console.log(lastModified);
-        console.log("aaaand check this");
-        console.log(tab.id);
+ 	
+
         //this is miliseconds cos its unix timestamps
         var timeAgo = new Date().getTime()-lastModified;
-        var timeAgoSeconds=timeAgo/1000;
+        //var timeAgoSeconds=timeAgo/1000;
         var nowtime= new Date().getTime();
-        console.log("now time-------");
-        console.log(nowtime);
-        console.log("modified time-------");
-        console.log(lastModified);
- 	      console.log(timeAgo);
- 	      console.log("in minutes");
- 	      var inminutes=secondsToMinutes(timeAgoSeconds);
- 	      console.log(inminutes);
- 	      var timeText  = document.createTextNode(Math.round(timeAgoSeconds));
- 	      console.log(timeText);
+      
+
+ 	     // var inminutes=secondsToMinutes(timeAgoSeconds);
+ 	      //console.log(inminutes);
+
+        //var timeText  = document.createTextNode(Math.round(timeAgoSeconds));
+ 	    //  var timeText  = document.createTextNode(milisecondsToTime(timeAgo));
+ 	     // console.log(timeText);
 	//var timerText  = document.createTextNode(tabs[i]);
 	//var timerText  = timeAgo;
 	//timerCell.appendChild(timeText);
   //timerCell.innerHtml="yooooo";
   	//timerCell.innerHtml="booooo";
 
-        var seconds=Math.round(timeAgoSeconds);
-        timerCell.innerHTML=seconds;
+      //  var seconds=Math.round(timeAgoSeconds);
+        timerCell.innerHTML=milisecondsToTime(timeAgo);
  	};
  });
 
@@ -82,9 +118,6 @@ var tabmanager=background.tabmanager;
 
    	
 };
-
-
-
 
 
 function updateAge(){
@@ -102,15 +135,17 @@ console.log("tab manager from updateAge");
       for(var i=0; i<cells.length; i++) {
         var cell=cells[i];
         var test= cell.parentNode.getAttribute('tabId');
-        console.log('tab id isssssss');
-        console.log(test);
+       // console.log('tab id isssssss');
+        //console.log(test);
         var lastModified = tabmanager.tabTimes[test];
-        console.log("last lastModified");
-        console.log(lastModified);
+        //console.log("last lastModified");
+        //console.log(lastModified);
         var timeAgo = new Date().getTime()-lastModified;
-        var timeAgoSeconds=timeAgo/1000;
-        var seconds=Math.round(timeAgoSeconds);
-        cell.innerHTML=seconds;
+        var timeText  = document.createTextNode(milisecondsToTime(timeAgo));
+
+       // var timeAgoSeconds=timeAgo/1000;
+        //var seconds=Math.round(timeAgoSeconds);
+        cell.innerHTML=milisecondsToTime(timeAgo);
         };  
 };
 
@@ -140,6 +175,30 @@ console.log("tab manager from updateAge");
 
 
 
+var milisecondsToTime = function(miliseconds) {
+console.log("miliseconds");
+console.log(miliseconds);
+
+
+  var totalSeconds=miliseconds/1000;
+  var hours   = Math.floor(totalSeconds / 3600);
+  var minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
+  var seconds = totalSeconds - (hours * 3600) - (minutes * 60);
+
+  // round seconds
+  seconds = Math.round(seconds);
+
+  console.log("rounded seconds");
+  console.log(seconds);
+
+  var result = (hours < 10 ? "0" + hours : hours);
+      result += ":" + (minutes < 10 ? "0" + minutes : minutes);
+      result += ":" + (seconds  < 10 ? "0" + seconds : seconds);
+  return result;
+}
+
+
+
 
 
 function secondsToMinutes(seconds) {
@@ -147,6 +206,20 @@ function secondsToMinutes(seconds) {
   s = s > 10 ? String(s) : "0" + String(s);
   return String(Math.floor(seconds / 60)) + ":" + s;
 };
+
+
+function minutesToMiliseconds(minutes){
+
+  return minutes*60*1000;
+
+}
+
+function milisecondsToMinutes(miliseconds){
+
+return miliseconds/(60*1000);
+
+}
+
 
 
 // function timeSinceActive(tab){

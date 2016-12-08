@@ -22,7 +22,8 @@
 ],
 // add permisons to access url of current tab
 "permissions": [
-    "tabs"
+    "tabs",
+    "storage"
 
   ],
 
