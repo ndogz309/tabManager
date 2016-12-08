@@ -36,8 +36,6 @@ console.log(background.maxAge);
 maxAgeInput.value=milisecondsToMinutes(background.maxAge);
 minTabsInput.value=background.minTabs;
 
-//maxAgeInput.value=background.maxAge/(1000*60);
-//background.maxAge;
 };
 
 function maxAgeChanged(){
@@ -61,11 +59,7 @@ function minTabsChanged(){
 
 function makeTable(tabmanager){
 
-// var background = chrome.extension.getBackgroundPage();
-
 var tabmanager=background.tabmanager;
-
-
 
   chrome.tabs.query({windowType: 'normal'}, function(tabs) {
 		var tabNum = tabs.length;
@@ -86,29 +80,8 @@ var tabmanager=background.tabmanager;
 
    			var timerCell  = newRow.insertCell(1);
         timerCell.className = 'timer-cell';
-
         var lastModified = tabmanager.tabTimes[tab.id];
- 	
-
-        //this is miliseconds cos its unix timestamps
         var timeAgo = new Date().getTime()-lastModified;
-        //var timeAgoSeconds=timeAgo/1000;
-        var nowtime= new Date().getTime();
-      
-
- 	     // var inminutes=secondsToMinutes(timeAgoSeconds);
- 	      //console.log(inminutes);
-
-        //var timeText  = document.createTextNode(Math.round(timeAgoSeconds));
- 	    //  var timeText  = document.createTextNode(milisecondsToTime(timeAgo));
- 	     // console.log(timeText);
-	//var timerText  = document.createTextNode(tabs[i]);
-	//var timerText  = timeAgo;
-	//timerCell.appendChild(timeText);
-  //timerCell.innerHtml="yooooo";
-  	//timerCell.innerHtml="booooo";
-
-      //  var seconds=Math.round(timeAgoSeconds);
         timerCell.innerHTML=milisecondsToTime(timeAgo);
  	};
  });
@@ -150,35 +123,11 @@ console.log("tab manager from updateAge");
 };
 
 
- // tableRef('.timer-cell').each(function() {
- //  console.log("calling this");
- // });
-
-
-// updateCountdown = function() {
-//   var self = this;
-//   $('.time-left').each(function() {
-//     var t = null;
-//     var myElem = $(this);
-//     var tabId = myElem.parent().data('tabid');
-//     if (settings.get('paused')) {
-//       myElem.html('paused');
-//     } else {
-//       var lastModified = tabmanager.tabTimes[tabId];
-//       var cutOff = new Date().getTime() - settings.get('stayOpen');
-//       var timeLeft = -1 * (Math.round((cutOff - lastModified) / 1000)).toString();
-//       myElem.html(Popup.Util.secondsToMinutes(timeLeft));
-//     }
-//   });
-// };
 
 
 
 
 var milisecondsToTime = function(miliseconds) {
-console.log("miliseconds");
-console.log(miliseconds);
-
 
   var totalSeconds=miliseconds/1000;
   var hours   = Math.floor(totalSeconds / 3600);
@@ -198,16 +147,6 @@ console.log(miliseconds);
 }
 
 
-
-
-
-function secondsToMinutes(seconds) {
-  var s = seconds % 60;
-  s = s > 10 ? String(s) : "0" + String(s);
-  return String(Math.floor(seconds / 60)) + ":" + s;
-};
-
-
 function minutesToMiliseconds(minutes){
 
   return minutes*60*1000;
@@ -219,16 +158,6 @@ function milisecondsToMinutes(miliseconds){
 return miliseconds/(60*1000);
 
 }
-
-
-
-// function timeSinceActive(tab){
-
-//  	var lastModified = tabmanager.tabTimes[tab.id];
-//  	var timeAgo = new Date().getTime()-lastModified;
-//  	var 
-
-// }
 
 
 

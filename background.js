@@ -93,10 +93,6 @@ killTabs(tabsToKill);
 
 };
 });
-
-
-
-
 };
 
 
@@ -149,19 +145,31 @@ console.log(tabmanager);
 
 chrome.tabs.onCreated.addListener(function(tab){
 	console.log("new tab opened");
-  tabmanager.updateLastAccessed(tab.id);
+  //tabmanager.updateLastAccessed(tab.id);
 
   console.log(tabmanager);
 
 });
 
 
-chrome.tabs.onUpdated.addListener(function(tab){
-	console.log("tab updated");
-	//tabmanager.updateLastAccessed;
+// chrome.tabs.onUpdated.addListener(function(tab){
+// 	console.log("tab updated");
+// console.log("tab id isssss");
+// console.log(changeInfo.tab.id);
+
+//   // updateLastAccessed(tab.id);
+// 	//tabmanager.updateLastAccessed;
 
 
-});
+// });
+
+
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  // alert(changeInfo.url);
+   updateLastAccessed(tabId);
+}); 
+
 
 
 
@@ -176,25 +184,21 @@ console.log(tabmanager);
 
 
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-	console.log("tab updated");
-	//tabmanager.updateLastAccessed;
+// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+// 	console.log("tab updated");
+// 	//tabmanager.updateLastAccessed;
 
-});
-
-
+// });
 
 
 
-tabmanager.updateLastAccessed = function (tabId) {
-  if (typeof tabId == "object") {
-    tabId = tabId.id;
-  }
 
-  if (typeof tabId != 'number') {
-    console.log('Error: ' + tabId.toString() + ' is not an number', tabId);
-    return;
-  }
+
+function updateLastAccessed(tabId) {
+ 
+
+  console.log("here----------tab id ");
+  console.log(tabId);
   tabmanager.tabTimes[tabId] = new Date().getTime();
 };
 
